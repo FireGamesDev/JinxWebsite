@@ -88,6 +88,7 @@
             opacity: 0;
             text-shadow: 0 0 50px var(--hot-pink);
         }
+        
 
         @keyframes glitch-flash {
             0% { opacity: 0; transform: scale(1); }
@@ -98,6 +99,39 @@
         }
 
         .active-glitch { animation: glitch-flash 0.3s steps(5) forwards; }
+
+       .heart-particle {
+            position: fixed; /* Ensures it uses screen coordinates */
+            width: 400px;
+            height: 400px;
+            pointer-events: none;
+            z-index: 99999;
+            filter: drop-shadow(0 0 10px var(--ekko-yellow));
+            /* Keep your animation here */
+            animation: heart-fall 2s linear forwards;
+        }
+
+        /* --- CHRONOBREAK POPUP --- */
+        .ekko-popup {
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: var(--dark-bg);
+            color: var(--ekko-yellow);
+            padding: 30px;
+            border: 8px double var(--ekko-yellow);
+            z-index: 10005;
+            font-size: 3rem;
+            text-align: center;
+            box-shadow: 0 0 100px var(--ekko-yellow);
+            transition: 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .ekko-popup.active { transform: translate(-50%, -50%) scale(1); }
+
+        .chronobreak-mode {
+            filter: invert(1) hue-rotate(90deg) !important;
+            animation: jitter 0.05s infinite !important;
+        }
 
         /* --- LANDING HERO --- */
         .landing {
@@ -218,6 +252,51 @@
         }
         .popup.active { transform: translate(-50%, -50%) scale(1) rotate(-5deg); }
 
+        /* --- EKKO CHRONOBREAK EFFECTS --- */
+        .chronobreak {
+            animation: rewind-shake 0.2s infinite;
+            filter: invert(1) hue-rotate(180deg);
+        }
+
+        @keyframes rewind-shake {
+            0% { transform: translate(2px, 2px); }
+            50% { transform: translate(-2px, -2px); }
+            100% { transform: translate(2px, -2px); }
+        }
+
+        .graffiti-overlay {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9998;
+            opacity: 0.5;
+            /* This ensures it centers based on the random coordinates we give it */
+            transform: translate(-50%, -50%);
+        }
+
+        @keyframes graffiti-glitch {
+            0% { transform: translate(-50%, -50%) scale(1) skew(0deg); filter: hue-rotate(0deg); }
+            20% { transform: translate(-52%, -48%) scale(1.1) skew(5deg); filter: hue-rotate(90deg); }
+            40% { transform: translate(-48%, -52%) scale(1) skew(-10deg); }
+            60% { transform: translate(-51%, -49%) scale(1.05); filter: contrast(200%); }
+            80% { transform: translate(-49%, -51%) scale(0.95) skew(2deg); }
+            100% { transform: translate(-50%, -50%) scale(1); }
+        }
+
+        .heart-particle {
+            position: fixed;
+            width: 400px;
+            height: auto;
+            pointer-events: none;
+            z-index: 10000;
+            filter: drop-shadow(0 0 10px var(--neon-pink));
+            animation: heart-float 1s ease-out forwards;
+        }
+
+        @keyframes heart-float {
+            0% { transform: scale(0) rotate(0deg); opacity: 1; }
+            100% { transform: scale(2) rotate(20deg) translateY(-100px); opacity: 0; }
+        }
+
         #canvas-bg { position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.4; }
         .cursor-x { position: fixed; pointer-events: none; color: var(--neon-pink); font-weight: bold; z-index: 1001; animation: fade-out 0.5s forwards; }
         @keyframes fade-out { from { opacity: 1; } to { opacity: 0; transform: scale(3); } }
@@ -227,6 +306,7 @@
 <body>
 
     <div id="big-x" class="big-x-overlay">X</div>
+    <div id="ekko-popup" class="ekko-popup">REWINDING...</div>
     <div id="popup" class="popup"></div>
     <canvas id="canvas-bg"></canvas>
 
@@ -270,7 +350,7 @@
             <h2 style="color: var(--ekko-yellow);">04. LITTLE MAN</h2>
             <img src="img/ekko.png" class="img-box" style="border-color: var(--ekko-yellow);" alt="Ekko">
             <p>Ekko thinks he’s so smart with his little clocks. We used to be friends, back when the world was just a playground of scrap metal. Now he looks at me with those sad, judgmental eyes. Tick tock, Little Man.</p>
-            <button class="jinx-btn" onclick="showMadness()">TICK TOCK</button>
+            <button class="jinx-btn" onclick="ekkoChronobreak()">TICK TOCK</button>
         </section>
 
         <section id="s5" class="section">
@@ -302,8 +382,10 @@
         <section id="s9" class="section">
             <h2>09. JUST KIDDING</h2>
             <img src="img/jinx-silly.png" class="img-box" alt="Jinx Silly">
+
             <p>Did I say I was going to blow everything up? I mean, probably. But look at this face! Does this look like the face of a cold-blooded criminal? Okay, don't answer that. Sometimes you just have to laugh at the voices.</p>
             <button class="jinx-btn" onclick="showMadness()">HA HA HA</button>
+
         </section>
 
         <section id="s10" class="section">
@@ -311,6 +393,8 @@
             <p>This is it. The finale they’ll never forget. A shower of sparks and a sky turned pink. It’s time to start the chaos. The fuse is lit, the rocket is aimed, and I’ve got a front-row seat. BYE BYE!</p>
             <button class="jinx-btn" onclick="showMadness()">BOOM!</button>
         </section>
+
+
     </div>
 
     <script>
@@ -344,17 +428,6 @@
         }
         ambientGlitch();
 
-        // --- BUTTON CLICK TRIGGER ---
-        function showMadness() {
-            // Trigger the glitch visual
-            runGlitch();
-
-            // Handle the popup
-            popup.innerText = quotes[Math.floor(Math.random()*quotes.length)];
-            popup.classList.add('active');
-            setTimeout(() => popup.classList.remove('active'), 800);
-        }
-
         // --- INTERSECTION OBSERVER ---
         const obs = new IntersectionObserver((es) => es.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); }), {threshold: 0.1});
         document.querySelectorAll('.section').forEach(s => obs.observe(s));
@@ -372,6 +445,72 @@
             }
         }
         setInterval(draw, 100);
+
+        function ekkoChronobreak() {
+            const ekkoPop = document.getElementById('ekko-popup');
+            
+            // Show the popup
+            ekkoPop.classList.add('active');
+            
+            // Spawn Hearts
+            for(let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('img');
+                    heart.src = 'img/heart-glow.png';
+                    heart.className = 'heart-particle';
+                    
+                    // --- RANDOM POSITIONING ---
+                    heart.style.left = Math.random() * 100 + 'vw'; // Random horizontal
+                    heart.style.top = Math.random() * 100 + 'vh';  // Random vertical
+                    
+                    // Randomize size slightly if 400px is too big
+                    const size = Math.random() * 200 + 200; 
+                    heart.style.width = size + 'px';
+                    heart.style.height = 'auto';
+
+                    document.body.appendChild(heart);
+                    setTimeout(() => heart.remove(), 2000);
+                }, i * 20);
+            }
+
+            // Hide popup after 2 seconds
+            setTimeout(() => {
+                ekkoPop.classList.remove('active');
+            }, 2000);
+        }
+
+        function showMadness() {
+            runGlitch();
+
+            const graffitiImgs = ['img/grafiti1.png', 'img/grafiti2.png'];
+            
+            for(let i = 0; i < 1; i++) {
+                const graf = document.createElement('img');
+                graf.src = graffitiImgs[Math.floor(Math.random() * graffitiImgs.length)];
+                graf.className = 'graffiti-overlay';
+                
+                // Randomly place it anywhere on the screen
+                graf.style.top = Math.random() * 100 + 'vh';
+                graf.style.left = Math.random() * 100 + 'vw';
+                
+                // Random size
+                graf.style.width = 100 + 'vw';
+                graf.style.height = 100 + 'vh';
+
+                
+                // Apply the glitch animation
+                graf.style.animation = `graffiti-glitch 0.2s steps(2) infinite`;
+
+                document.body.appendChild(graf);
+                
+                // Quick removal to simulate a glitchy "flash"
+                setTimeout(() => graf.remove(), 400);
+            }
+
+            popup.innerText = quotes[Math.floor(Math.random() * quotes.length)];
+            popup.classList.add('active');
+            setTimeout(() => popup.classList.remove('active'), 800);
+        }
 
         // --- CURSOR X PARTICLES ---
         document.addEventListener('mousemove', (e) => {
