@@ -292,6 +292,21 @@
             animation: heart-float 1s ease-out forwards;
         }
 
+        .portfolio-disclaimer {
+            padding: 40px 20px;
+            font-size: 0.7rem;
+            color: #444; /* Dark gray so it's subtle */
+            text-align: center;
+            border-top: 1px solid #111;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .portfolio-disclaimer a {
+            color: var(--jinx-blue);
+            text-decoration: underline;
+        }
+
         @keyframes heart-float {
             0% { transform: scale(0) rotate(0deg); opacity: 1; }
             100% { transform: scale(2) rotate(20deg) translateY(-100px); opacity: 0; }
@@ -326,7 +341,7 @@
         <a href="#s7">COOL</a> <a href="#s8">THRONE</a> <a href="#s9">SILLY</a> <a href="#s10">BOOM</a>
     </nav>
 
-    <div class="content-wrap">
+    <div class="content-wrap" id="content-container">
         <section id="s1" class="section">
             <h2>01. WATCHING?</h2>
             <img src="img/jinx1.png" class="img-box" alt="Jinx 1">
@@ -394,7 +409,10 @@
             <button class="jinx-btn" onclick="showMadness()">BOOM!</button>
         </section>
 
-
+        <footer class="portfolio-disclaimer">
+            <p>FAN PROJECT // NOT AFFILIATED WITH RIOT GAMES</p>
+            <p>Character & Imagery &copy; Riot Games & Fortiche. Created for portfolio purposes only.</p>
+        </footer>
     </div>
 
     <script>
@@ -484,18 +502,18 @@
 
             const graffitiImgs = ['img/grafiti1.png', 'img/grafiti2.png'];
             
-            for(let i = 0; i < 1; i++) {
+            for(let i = 0; i < 3; i++) {
                 const graf = document.createElement('img');
                 graf.src = graffitiImgs[Math.floor(Math.random() * graffitiImgs.length)];
                 graf.className = 'graffiti-overlay';
                 
                 // Randomly place it anywhere on the screen
-                graf.style.top = Math.random() * 100 + 'vh';
-                graf.style.left = Math.random() * 100 + 'vw';
+                graf.style.top = Math.random() * 500 + 'vh';
+                graf.style.left = Math.random() * 500 + 'vw';
                 
                 // Random size
-                graf.style.width = 100 + 'vw';
-                graf.style.height = 100 + 'vh';
+                graf.style.width = 500 + 'vw';
+                graf.style.height = 500 + 'vh';
 
                 
                 // Apply the glitch animation
@@ -522,6 +540,57 @@
                 setTimeout(() => x.remove(), 500);
             }
         });
+
+        let currentScroll = window.scrollY;
+        let targetScroll = window.scrollY;
+        let skew = 0;
+        const contentContainer = document.getElementById('content-container');
+        // Selects all headings and specific glitch-target texts
+        const heatTexts = document.querySelectorAll('.heat-text, h2');
+
+        function loopScrollPhysics() {
+            targetScroll = window.scrollY;
+            
+            // Calculate velocity (speed of scroll)
+            let diff = targetScroll - currentScroll;
+            currentScroll = targetScroll;
+
+            // If movement is negligible, reset to flat state and keep looping
+            if (Math.abs(diff) < 0.1) {
+                contentContainer.style.transform = `skewY(0deg)`;
+                heatTexts.forEach(text => {
+                    text.style.textShadow = 'none';
+                    text.style.filter = 'blur(0px)';
+                });
+                requestAnimationFrame(loopScrollPhysics);
+                return;
+            }
+
+            // Calculate Skew (Clamped at 5 degrees so it doesn't break the layout)
+            skew = diff * 0.15;
+            if (skew > 5) skew = 5; 
+            if (skew < -5) skew = -5;
+
+            // Apply the physical tilt to the whole page
+            contentContainer.style.transform = `skewY(${skew}deg)`;
+
+            // Apply Chromatic Aberration (Red/Cyan split) based on speed
+            let glitchOffset = Math.abs(skew) * 3; // Intensity of the split
+            let blurAmount = Math.abs(skew) * 0.5;
+
+            heatTexts.forEach(text => {
+                if (glitchOffset > 0.5) {
+                    // High-speed "Heat Glitch"
+                    text.style.textShadow = `${glitchOffset}px 0 0 #ff00ff, -${glitchOffset}px 0 0 #00f2ff`;
+                    text.style.filter = `blur(${blurAmount}px)`;
+                }
+            });
+
+            requestAnimationFrame(loopScrollPhysics);
+        }
+
+        // Kick off the loop immediately
+        loopScrollPhysics();
         
         document.addEventListener('contextmenu', e => e.preventDefault());
     </script>
