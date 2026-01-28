@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JINX // TOTAL PSYCHOSIS</title>
+    <link rel="icon" type="image/png" href="img/icon.png">
+    <style>
+        :root {
+            --neon-pink: #ff00ff;
+            --hot-pink: #ff1493;
+            --jinx-blue: #00f2ff;
+            --dark-bg: #030303;
+            --ekko-yellow: #dbff00;
+        }
+
+        /* --- CUSTOM SCROLLBAR --- */
+        ::-webkit-scrollbar { width: 12px; }
+        ::-webkit-scrollbar-track { background: var(--dark-bg); }
+        ::-webkit-scrollbar-thumb { 
+            background: var(--neon-pink); 
+            border: 3px solid var(--dark-bg);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover { background: var(--jinx-blue); }
+
+        * {
+            user-select: none;
+            -webkit-user-select: none;
+            cursor: crosshair;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: #eee;
+            font-family: 'Courier New', monospace;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        /* --- JAGGED NAV BAR --- */
+        nav {
+            position: sticky;
+            top: 0;
+            width: 100%;
+            background: url('img/icon.png') repeat-x center;
+            background-size: 50px;
+            background-color: var(--neon-pink);
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding: 20px 0;
+            z-index: 1000;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 95% 100%, 80% 90%, 60% 100%, 40% 85%, 20% 100%, 0 80%);
+            border-bottom: 5px solid white;
+        }
+
+        nav a {
+            color: #000;
+            text-decoration: none;
+            font-weight: 900;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            background: white;
+            padding: 5px 12px;
+            transform: rotate(-2deg);
+            border: 2px solid black;
+        }
+
+        nav a:hover {
+            background: var(--jinx-blue);
+            transform: rotate(2deg) scale(1.1);
+        }
+
+        /* --- LANDING HERO --- */
+        .landing {
+            height: 100vh;
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('img/jinx_dark.png');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-bottom: 10px solid var(--hot-pink);
+        }
+
+        .landing h1 {
+            font-size: clamp(4rem, 15vw, 8rem);
+            color: var(--jinx-blue);
+            text-shadow: 10px 10px var(--neon-pink);
+            text-transform: uppercase;
+            animation: jitter 0.1s infinite alternate;
+        }
+
+        /* --- CONTENT STYLE --- */
+        .content-wrap { padding: 20px; max-width: 900px; margin-inline: auto; }
+
+        .section {
+            padding: 80px 20px;
+            margin-bottom: 120px;
+            background: rgba(10, 10, 10, 0.9);
+            border: 4px solid var(--jinx-blue);
+            position: relative;
+            opacity: 0;
+            transition: 0.6s ease-out;
+        }
+
+        .section.visible { opacity: 1; transform: skewX(-1deg); }
+
+        /* --- IMAGE MAPPING --- */
+        .img-box {
+            width: 100%;
+            margin: 30px 0;
+            border: 6px solid var(--neon-pink);
+            box-shadow: 15px 15px 0 var(--jinx-blue);
+        }
+
+        /* --- POPUP --- */
+        .popup {
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: var(--hot-pink);
+            color: white;
+            padding: 60px;
+            border: 10px solid white;
+            z-index: 2000;
+            font-size: 3rem;
+            font-weight: bold;
+            text-align: center;
+            transition: 0.2s;
+            pointer-events: none;
+        }
+        .popup.active { transform: translate(-50%, -50%) scale(1) rotate(5deg); }
+
+        /* --- BUTTONS --- */
+        .jinx-btn {
+            background: transparent;
+            border: 4px solid var(--jinx-blue);
+            color: var(--jinx-blue);
+            padding: 15px 45px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            position: relative;
+            transition: 0.1s;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+        .jinx-btn:hover {
+            background: var(--neon-pink);
+            color: white;
+            transform: rotate(-3deg) scale(1.1);
+            box-shadow: 10px 10px 0px var(--jinx-blue);
+        }
+
+        /* --- AMBIENT --- */
+        #canvas-bg { position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.4; }
+        .cursor-x { position: fixed; pointer-events: none; color: var(--neon-pink); font-weight: bold; z-index: 1001; animation: fade-out 0.6s forwards; }
+        @keyframes fade-out { from { opacity: 1; } to { opacity: 0; transform: scale(4) rotate(45deg); } }
+        @keyframes jitter { 0% { transform: translate(0,0); } 100% { transform: translate(4px, -4px); } }
+
+    </style>
+</head>
+<body>
+
+    <canvas id="canvas-bg"></canvas>
+    <div id="popup" class="popup"></div>
+
+    <div class="landing">
+        <h1>STAY STILL</h1>
+        <p style="color:var(--neon-pink); font-size: 2rem;">"I'm wearing the smile you gave me."</p>
+    </div>
+
+    <nav>
+        <a href="#s1">HELLO</a> <a href="#s2">VI</a> <a href="#s3">SILCO</a>
+        <a href="#s4">EKKO</a> <a href="#s5">GUNS</a> <a href="#s6">VOICES</a>
+        <a href="#s7">SHIMMER</a> <a href="#s8">THRONE</a> <a href="#s9">SILLY</a>
+        <a href="#s10">BOOM</a>
+    </nav>
+
+    <div class="content-wrap">
+        
+        <section id="s1" class="section">
+            <h2>01. WATCHING?</h2>
+            <img src="img/jinx1.png" class="img-box" alt="Jinx 1">
+            <p>They think I'm a mess. A broken toy left in the rain. Powder was a scared little girl who hid in the shadows, waiting for someone to save her. Jinx doesn't wait. Jinx brings the fire. Can you feel the heat yet? Every time I blink, I see the lights of Piltover screaming to be put out. It's like a song that never stops, a high-pitched ringing in my ears that only quietens when something goes BOOM.</p>
+            <button class="jinx-btn" onclick="showMadness()">LISTEN</button>
+        </section>
+
+        <section id="s4" class="section" style="border-color: var(--ekko-yellow);">
+            <h2 style="color: var(--ekko-yellow);">04. LITTLE MAN</h2>
+            <img src="img/ekko.png" class="img-box" style="border-color: var(--ekko-yellow); box-shadow: 15px 15px 0 #000;" alt="Ekko">
+            <p>Ekko thinks he’s so smart with his little clocks and his winding gears. We used to be friends, back when the world was just a playground of scrap metal. Now he looks at me with those sad, judgmental eyes. He wants to rewind time? Fine! Let him try. He’s stuck in a loop of trying to save everyone, while I’m moving forward into the beautiful chaos. You’re too slow, Little Man!</p>
+            <button class="jinx-btn" onclick="showMadness()">TICK TOCK</button>
+        </section>
+
+        <section id="s7" class="section">
+            <h2>07. THE COOL LOOK</h2>
+            <img src="img/jinx-cool.png" class="img-box" alt="Jinx Cool">
+            <p>The Shimmer is a funny thing. It makes everything go fast and bright. It feels like lightning running through my blood, turning my eyes into glowing embers. It saved my life, they say. But it also took the rest of what was left of Powder. Now, when I move, the world blurs into streaks of violet and neon. I feel stronger, faster, and much more... unstable. My heart beats like a drum made of scrap metal.</p>
+            <button class="jinx-btn" onclick="showMadness()">EYES UP</button>
+        </section>
+
+        <section id="s8" class="section">
+            <h2>08. THE THRONE</h2>
+            <img src="img/jinx-throne.png" class="img-box" alt="Jinx Throne">
+            <p>I made a seat for myself. Right at the top of the junk heap. From here, I can see everything. I see the Enforcers crawling like ants, and I see the sparkling towers of the Council. They think they're safe. They think they're better than us. But a throne is just a chair until you decide to sit in it. And I'm not just sitting—I'm waiting for the right moment to burn it all down.</p>
+            <button class="jinx-btn" onclick="showMadness()">SIT DOWN</button>
+        </section>
+
+        <section id="s9" class="section">
+            <h2>09. JUST KIDDING</h2>
+            <img src="img/jinx-silly.png" class="img-box" alt="Jinx Silly">
+            <p>Did I say I was going to blow everything up? I mean, probably. But look at this face! Does this look like the face of a cold-blooded criminal? Okay, don't answer that. Sometimes you just have to laugh at the voices. If you don't laugh, they win. And Jinx doesn't like losing. Let's have a tea party instead! I'll bring the cupcakes, you bring the... well, just try not to explode before the third course.</p>
+            <button class="jinx-btn" onclick="showMadness()">HA HA HA</button>
+        </section>
+
+        </div>
+
+    <script>
+        // --- POPUP AUTO-HIDE (2.5s) ---
+        const quotes = ["SMILE!", "BOOM!", "X X X", "SHUT UP!", "BYE BYE!", "REALLY?", "CATCH!", "POWDER?!"];
+        let pTimer;
+        function showMadness() {
+            clearTimeout(pTimer);
+            const p = document.getElementById('popup');
+            p.innerText = quotes[Math.floor(Math.random()*quotes.length)];
+            p.classList.add('active');
+            document.body.style.background = 'var(--neon-pink)';
+            setTimeout(() => document.body.style.background = 'var(--dark-bg)', 100);
+            pTimer = setTimeout(() => p.classList.remove('active'), 2500);
+        }
+
+        // --- SCROLL REVEAL ---
+        const obs = new IntersectionObserver((es) => es.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); }), {threshold: 0.1});
+        document.querySelectorAll('.section').forEach(s => obs.observe(s));
+
+        // --- BACKGROUND LINES ---
+        const canvas = document.getElementById('canvas-bg');
+        const ctx = canvas.getContext('2d');
+        function res() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        window.onresize = res; res();
+        function draw() {
+            ctx.clearRect(0,0, canvas.width, canvas.height);
+            ctx.strokeStyle = Math.random() > 0.5 ? '#ff00ff' : '#00f2ff';
+            for(let i=0; i<30; i++) {
+                ctx.beginPath(); ctx.moveTo(Math.random()*canvas.width, 0); ctx.lineTo(Math.random()*canvas.width, canvas.height); ctx.stroke();
+            }
+        }
+        setInterval(draw, 100);
+
+        // --- CURSOR X ---
+        document.addEventListener('mousemove', (e) => {
+            if (Math.random() > 0.8) {
+                const x = document.createElement('div');
+                x.className = 'cursor-x'; x.innerHTML = 'X';
+                x.style.left = e.clientX + 'px'; x.style.top = e.clientY + 'px';
+                document.body.appendChild(x);
+                setTimeout(() => x.remove(), 600);
+            }
+        });
+
+        document.addEventListener('contextmenu', e => e.preventDefault());
+    </script>
+</body>
+</html>
