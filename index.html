@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JINX // TOTAL PSYCHOSIS</title>
+    <title>JINX // THE LOOSE CANNON</title>
     <link rel="icon" type="image/png" href="img/icon.png">
     <style>
         :root {
@@ -14,15 +14,14 @@
             --ekko-yellow: #dbff00;
         }
 
-        /* --- CUSTOM SCROLLBAR --- */
-        ::-webkit-scrollbar { width: 12px; }
+        /* --- CUSTOM NEON SCROLLBAR --- */
+        ::-webkit-scrollbar { width: 10px; }
         ::-webkit-scrollbar-track { background: var(--dark-bg); }
         ::-webkit-scrollbar-thumb { 
             background: var(--neon-pink); 
-            border: 3px solid var(--dark-bg);
-            border-radius: 10px;
+            border: 2px solid var(--dark-bg);
+            box-shadow: inset 0 0 5px var(--jinx-blue);
         }
-        ::-webkit-scrollbar-thumb:hover { background: var(--jinx-blue); }
 
         * {
             user-select: none;
@@ -45,34 +44,58 @@
             position: sticky;
             top: 0;
             width: 100%;
-            background: url('img/icon.png') repeat-x center;
-            background-size: 50px;
             background-color: var(--neon-pink);
             display: flex;
             justify-content: center;
-            gap: 10px;
-            padding: 20px 0;
+            gap: 8px;
+            padding: 25px 5px;
             z-index: 1000;
-            clip-path: polygon(0 0, 100% 0, 100% 85%, 95% 100%, 80% 90%, 60% 100%, 40% 85%, 20% 100%, 0 80%);
-            border-bottom: 5px solid white;
+            clip-path: polygon(0 0, 100% 0, 100% 80%, 90% 100%, 75% 85%, 60% 100%, 45% 80%, 30% 100%, 15% 85%, 0 100%);
+            border-bottom: 4px solid #fff;
         }
 
         nav a {
             color: #000;
             text-decoration: none;
             font-weight: 900;
-            font-size: 0.8rem;
-            text-transform: uppercase;
+            font-size: 0.65rem;
             background: white;
-            padding: 5px 12px;
-            transform: rotate(-2deg);
+            padding: 4px 8px;
             border: 2px solid black;
+            transition: 0.1s;
         }
 
         nav a:hover {
             background: var(--jinx-blue);
-            transform: rotate(2deg) scale(1.1);
+            transform: scale(1.2) rotate(5deg);
         }
+
+        /* --- FULL SCREEN GLITCH X --- */
+        .big-x-overlay {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80vw;
+            color: var(--neon-pink);
+            font-weight: bold;
+            z-index: 9999;
+            pointer-events: none;
+            opacity: 0;
+            text-shadow: 0 0 50px var(--hot-pink);
+        }
+
+        @keyframes glitch-flash {
+            0% { opacity: 0; transform: scale(1); }
+            1% { opacity: 0.8; transform: scale(1.1) rotate(5deg); }
+            2% { opacity: 0; }
+            40% { opacity: 0; }
+            41% { opacity: 0.5; background: rgba(255, 0, 255, 0.2); }
+            42% { opacity: 0; }
+        }
+
+        .active-glitch { animation: glitch-flash 0.3s steps(1); }
 
         /* --- LANDING HERO --- */
         .landing {
@@ -84,38 +107,67 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            border-bottom: 10px solid var(--hot-pink);
+            border-bottom: 8px solid var(--neon-pink);
         }
 
         .landing h1 {
-            font-size: clamp(4rem, 15vw, 8rem);
+            font-size: 5rem;
             color: var(--jinx-blue);
-            text-shadow: 10px 10px var(--neon-pink);
-            text-transform: uppercase;
-            animation: jitter 0.1s infinite alternate;
+            text-shadow: 6px 6px var(--neon-pink);
+            margin: 0;
         }
 
-        /* --- CONTENT STYLE --- */
-        .content-wrap { padding: 20px; max-width: 900px; margin-inline: auto; }
+        /* --- CONTENT WRAP --- */
+        .content-wrap { padding: 20px; max-width: 800px; margin: 0 auto; }
 
         .section {
-            padding: 80px 20px;
-            margin-bottom: 120px;
-            background: rgba(10, 10, 10, 0.9);
-            border: 4px solid var(--jinx-blue);
-            position: relative;
+            padding: 60px 20px;
+            margin-bottom: 80px;
+            background: rgba(10, 10, 10, 0.85);
+            border: 3px solid var(--jinx-blue);
             opacity: 0;
-            transition: 0.6s ease-out;
+            transform: translateY(30px);
+            transition: 0.5s;
         }
 
-        .section.visible { opacity: 1; transform: skewX(-1deg); }
+        .section.visible { opacity: 1; transform: translateY(0); }
 
-        /* --- IMAGE MAPPING --- */
         .img-box {
             width: 100%;
-            margin: 30px 0;
-            border: 6px solid var(--neon-pink);
-            box-shadow: 15px 15px 0 var(--jinx-blue);
+            margin: 20px 0;
+            border: 4px solid var(--neon-pink);
+            box-shadow: 10px 10px 0 var(--jinx-blue);
+        }
+
+        /* --- BUTTON STYLE (V2) --- */
+        .jinx-btn {
+            background: transparent;
+            border: 4px solid var(--jinx-blue);
+            color: var(--jinx-blue);
+            padding: 12px 30px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            position: relative;
+            transition: 0.1s;
+            overflow: hidden;
+            margin-top: 15px;
+        }
+
+        .jinx-btn:hover {
+            background: var(--neon-pink);
+            color: white;
+            box-shadow: 8px 8px 0 var(--jinx-blue);
+        }
+
+        .jinx-btn:hover::after {
+            content: "X X X";
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--hot-pink);
         }
 
         /* --- POPUP --- */
@@ -125,121 +177,129 @@
             transform: translate(-50%, -50%) scale(0);
             background: var(--hot-pink);
             color: white;
-            padding: 60px;
-            border: 10px solid white;
-            z-index: 2000;
-            font-size: 3rem;
-            font-weight: bold;
-            text-align: center;
-            transition: 0.2s;
-            pointer-events: none;
-        }
-        .popup.active { transform: translate(-50%, -50%) scale(1) rotate(5deg); }
-
-        /* --- BUTTONS --- */
-        .jinx-btn {
-            background: transparent;
-            border: 4px solid var(--jinx-blue);
-            color: var(--jinx-blue);
-            padding: 15px 45px;
-            font-size: 1.5rem;
-            font-weight: bold;
-            text-transform: uppercase;
-            position: relative;
+            padding: 40px;
+            border: 5px solid white;
+            z-index: 5000;
+            font-size: 2rem;
             transition: 0.1s;
-            overflow: hidden;
-            margin-top: 20px;
         }
-        .jinx-btn:hover {
-            background: var(--neon-pink);
-            color: white;
-            transform: rotate(-3deg) scale(1.1);
-            box-shadow: 10px 10px 0px var(--jinx-blue);
-        }
+        .popup.active { transform: translate(-50%, -50%) scale(1) rotate(-5deg); }
 
-        /* --- AMBIENT --- */
-        #canvas-bg { position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.4; }
-        .cursor-x { position: fixed; pointer-events: none; color: var(--neon-pink); font-weight: bold; z-index: 1001; animation: fade-out 0.6s forwards; }
-        @keyframes fade-out { from { opacity: 1; } to { opacity: 0; transform: scale(4) rotate(45deg); } }
-        @keyframes jitter { 0% { transform: translate(0,0); } 100% { transform: translate(4px, -4px); } }
-
+        #canvas-bg { position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.3; }
+        .cursor-x { position: fixed; pointer-events: none; color: var(--neon-pink); font-weight: bold; z-index: 1001; animation: fade-out 0.5s forwards; }
+        @keyframes fade-out { from { opacity: 1; } to { opacity: 0; transform: scale(3); } }
     </style>
 </head>
 <body>
 
-    <canvas id="canvas-bg"></canvas>
+    <div id="big-x" class="big-x-overlay">X</div>
     <div id="popup" class="popup"></div>
+    <canvas id="canvas-bg"></canvas>
 
     <div class="landing">
         <h1>STAY STILL</h1>
-        <p style="color:var(--neon-pink); font-size: 2rem;">"I'm wearing the smile you gave me."</p>
+        <p style="color:var(--neon-pink)">Welcome to the playground.</p>
     </div>
 
     <nav>
         <a href="#s1">HELLO</a> <a href="#s2">VI</a> <a href="#s3">SILCO</a>
         <a href="#s4">EKKO</a> <a href="#s5">GUNS</a> <a href="#s6">VOICES</a>
-        <a href="#s7">SHIMMER</a> <a href="#s8">THRONE</a> <a href="#s9">SILLY</a>
-        <a href="#s10">BOOM</a>
+        <a href="#s7">COOL</a> <a href="#s8">THRONE</a> <a href="#s9">SILLY</a> <a href="#s10">BOOM</a>
     </nav>
 
     <div class="content-wrap">
-        
         <section id="s1" class="section">
             <h2>01. WATCHING?</h2>
             <img src="img/jinx1.png" class="img-box" alt="Jinx 1">
-            <p>They think I'm a mess. A broken toy left in the rain. Powder was a scared little girl who hid in the shadows, waiting for someone to save her. Jinx doesn't wait. Jinx brings the fire. Can you feel the heat yet? Every time I blink, I see the lights of Piltover screaming to be put out. It's like a song that never stops, a high-pitched ringing in my ears that only quietens when something goes BOOM.</p>
+            <p>Powder was a scared little girl who hid in the shadows, waiting for someone to save her. Jinx doesn't wait. Jinx brings the fire. Can you feel the heat yet? Every time I blink, I see the lights of Piltover screaming to be put out. It's like a song that never stops, a high-pitched ringing in my ears that only quietens when something goes BOOM.</p>
             <button class="jinx-btn" onclick="showMadness()">LISTEN</button>
         </section>
 
-        <section id="s4" class="section" style="border-color: var(--ekko-yellow);">
+        <section id="s2" class="section">
+            <h2>02. DEAREST SISTER</h2>
+            <p>Violet. The name tastes like iron and regret. You told me I was a jinx. You told me to stay away. And then you left. You went to the topside and traded your rags for a badge. Does she think she can punch her way back into my heart? You can't fix what you shattered, Vi! I waited for years. I counted every second in the dark.</p>
+            <button class="jinx-btn" onclick="showMadness()">SISTER?</button>
+        </section>
+
+        <section id="s3" class="section">
+            <h2>03. FATHER</h2>
+            <p>Silco saw me. Not the mistake, but the masterpiece. He found a girl drowning in her own tears and told her she was perfect. He gave me a workshop, he gave me a purpose, and he gave me the world. He understood that to survive in Zaun, you have to stop caring about being "good." We'll show them all!</p>
+            <button class="jinx-btn" onclick="showMadness()">FOR SILCO</button>
+        </section>
+
+        <section id="s4" class="section">
             <h2 style="color: var(--ekko-yellow);">04. LITTLE MAN</h2>
-            <img src="img/ekko.png" class="img-box" style="border-color: var(--ekko-yellow); box-shadow: 15px 15px 0 #000;" alt="Ekko">
-            <p>Ekko thinks he’s so smart with his little clocks and his winding gears. We used to be friends, back when the world was just a playground of scrap metal. Now he looks at me with those sad, judgmental eyes. He wants to rewind time? Fine! Let him try. He’s stuck in a loop of trying to save everyone, while I’m moving forward into the beautiful chaos. You’re too slow, Little Man!</p>
+            <img src="img/ekko.png" class="img-box" style="border-color: var(--ekko-yellow);" alt="Ekko">
+            <p>Ekko thinks he’s so smart with his little clocks. We used to be friends, back when the world was just a playground of scrap metal. Now he looks at me with those sad, judgmental eyes. He wants to rewind time? Fine! Let him try. He’s stuck in a loop while I’m moving forward into the beautiful chaos.</p>
             <button class="jinx-btn" onclick="showMadness()">TICK TOCK</button>
         </section>
 
+        <section id="s5" class="section">
+            <h2>05. MY BABIES</h2>
+            <p>Meet Fishbones. He’s a bit of a pessimist, always talking about total annihilation. And Pow-Pow? She just likes to talk fast—very, very fast. They are the only ones who never lie to me. They don't leave, and they don't change their minds. When I hold them, the voices finally start to harmonize.</p>
+            <button class="jinx-btn" onclick="showMadness()">RELOAD</button>
+        </section>
+
+        <section id="s6" class="section">
+            <h2>06. THE CHORUS</h2>
+            <p>Can you hear them? The whispers? Mylo says I’m clumsy. Claggor just stares. They’re always there, sitting on my shoulders, watching me work. Sometimes I try to drown them out, but they just get louder. They keep me sharp. They keep me angry. Without the ghosts, I’d just be a girl.</p>
+            <button class="jinx-btn" onclick="showMadness()">SHUT UP!</button>
+        </section>
+
         <section id="s7" class="section">
-            <h2>07. THE COOL LOOK</h2>
+            <h2>07. EYES UP</h2>
             <img src="img/jinx-cool.png" class="img-box" alt="Jinx Cool">
-            <p>The Shimmer is a funny thing. It makes everything go fast and bright. It feels like lightning running through my blood, turning my eyes into glowing embers. It saved my life, they say. But it also took the rest of what was left of Powder. Now, when I move, the world blurs into streaks of violet and neon. I feel stronger, faster, and much more... unstable. My heart beats like a drum made of scrap metal.</p>
-            <button class="jinx-btn" onclick="showMadness()">EYES UP</button>
+            <p>The Shimmer is a funny thing. It feels like lightning running through my blood, turning my eyes into glowing embers. It saved my life, they say. But it also took the rest of what was left of Powder. Now, when I move, the world blurs into streaks of violet and neon. I feel stronger and much more... unstable.</p>
+            <button class="jinx-btn" onclick="showMadness()">SHIMMER</button>
         </section>
 
         <section id="s8" class="section">
             <h2>08. THE THRONE</h2>
             <img src="img/jinx-throne.png" class="img-box" alt="Jinx Throne">
-            <p>I made a seat for myself. Right at the top of the junk heap. From here, I can see everything. I see the Enforcers crawling like ants, and I see the sparkling towers of the Council. They think they're safe. They think they're better than us. But a throne is just a chair until you decide to sit in it. And I'm not just sitting—I'm waiting for the right moment to burn it all down.</p>
+            <p>I made a seat for myself. Right at the top of the junk heap. From here, I can see the sparkling towers of the Council. They think they're safe. They think they're better than us. But a throne is just a chair until you decide to sit in it. And I'm not just sitting—I'm waiting for the moment to burn it down.</p>
             <button class="jinx-btn" onclick="showMadness()">SIT DOWN</button>
         </section>
 
         <section id="s9" class="section">
             <h2>09. JUST KIDDING</h2>
             <img src="img/jinx-silly.png" class="img-box" alt="Jinx Silly">
-            <p>Did I say I was going to blow everything up? I mean, probably. But look at this face! Does this look like the face of a cold-blooded criminal? Okay, don't answer that. Sometimes you just have to laugh at the voices. If you don't laugh, they win. And Jinx doesn't like losing. Let's have a tea party instead! I'll bring the cupcakes, you bring the... well, just try not to explode before the third course.</p>
+            <p>Did I say I was going to blow everything up? I mean, probably. But look at this face! Does this look like the face of a cold-blooded criminal? Okay, don't answer that. Sometimes you just have to laugh at the voices. If you don't laugh, they win. And Jinx doesn't like losing. Let's have a tea party!</p>
             <button class="jinx-btn" onclick="showMadness()">HA HA HA</button>
         </section>
 
-        </div>
+        <section id="s10" class="section">
+            <h2>10. BYE BYE</h2>
+            <p>This is it. The finale they’ll never forget. A shower of sparks and a sky turned pink. It’s time to stop hiding. It’s time to start the chaos. The fuse is lit, the rocket is aimed, and I’ve got a front-row seat. Don't blink, or you'll miss the best part of the show. Boom.</p>
+            <button class="jinx-btn" onclick="showMadness()">BOOM!</button>
+        </section>
+    </div>
 
     <script>
-        // --- POPUP AUTO-HIDE (2.5s) ---
+        const bigX = document.getElementById('big-x');
+        const popup = document.getElementById('popup');
         const quotes = ["SMILE!", "BOOM!", "X X X", "SHUT UP!", "BYE BYE!", "REALLY?", "CATCH!", "POWDER?!"];
-        let pTimer;
-        function showMadness() {
-            clearTimeout(pTimer);
-            const p = document.getElementById('popup');
-            p.innerText = quotes[Math.floor(Math.random()*quotes.length)];
-            p.classList.add('active');
+        
+        // --- RANDOM FULL SCREEN GLITCH ---
+        function triggerGlitch() {
+            bigX.classList.add('active-glitch');
             document.body.style.background = 'var(--neon-pink)';
-            setTimeout(() => document.body.style.background = 'var(--dark-bg)', 100);
-            pTimer = setTimeout(() => p.classList.remove('active'), 2500);
+            setTimeout(() => {
+                bigX.classList.remove('active-glitch');
+                document.body.style.background = 'var(--dark-bg)';
+            }, 300);
+            setTimeout(triggerGlitch, Math.random() * 5000 + 2000);
+        }
+        triggerGlitch();
+
+        function showMadness() {
+            popup.innerText = quotes[Math.floor(Math.random()*quotes.length)];
+            popup.classList.add('active');
+            setTimeout(() => popup.classList.remove('active'), 2500);
         }
 
-        // --- SCROLL REVEAL ---
         const obs = new IntersectionObserver((es) => es.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); }), {threshold: 0.1});
         document.querySelectorAll('.section').forEach(s => obs.observe(s));
 
-        // --- BACKGROUND LINES ---
         const canvas = document.getElementById('canvas-bg');
         const ctx = canvas.getContext('2d');
         function res() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
@@ -247,23 +307,21 @@
         function draw() {
             ctx.clearRect(0,0, canvas.width, canvas.height);
             ctx.strokeStyle = Math.random() > 0.5 ? '#ff00ff' : '#00f2ff';
-            for(let i=0; i<30; i++) {
+            for(let i=0; i<25; i++) {
                 ctx.beginPath(); ctx.moveTo(Math.random()*canvas.width, 0); ctx.lineTo(Math.random()*canvas.width, canvas.height); ctx.stroke();
             }
         }
         setInterval(draw, 100);
 
-        // --- CURSOR X ---
         document.addEventListener('mousemove', (e) => {
             if (Math.random() > 0.8) {
                 const x = document.createElement('div');
                 x.className = 'cursor-x'; x.innerHTML = 'X';
                 x.style.left = e.clientX + 'px'; x.style.top = e.clientY + 'px';
                 document.body.appendChild(x);
-                setTimeout(() => x.remove(), 600);
+                setTimeout(() => x.remove(), 500);
             }
         });
-
         document.addEventListener('contextmenu', e => e.preventDefault());
     </script>
 </body>
